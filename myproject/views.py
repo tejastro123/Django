@@ -23,7 +23,7 @@ def removepunc(request):
 def analyze(request):
     # Get the text
     djtext = request.POST.get('text', 'default')
-    print(djtext)
+    
     removepunc=request.POST.get('removepunc','off')
     fullcaps=request.POST.get('fullcaps','off')
     newlineremover=request.POST.get('newlineremover', 'off')
@@ -35,35 +35,37 @@ def analyze(request):
         for char in djtext:
             if char not in punctuations:
                 analyzed = analyzed + char
-        params = {'purpose': 'Removed Punctuations', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+        param = {'purpose': 'Removed Punctuations', 'analyzed_text': analyzed}
+        djtext = analyzed
     
-    elif fullcaps=="on":
+    if fullcaps=="on":
         analyzed=""
         for char in djtext:
             analyzed=analyzed+char.upper()
         param = {'purpose': 'Change To Uppercase', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', param)
+        djtext = analyzed
     
-    elif newlineremover=="on":
+    if newlineremover=="on":
         analyzed=""
         for char in djtext:
-             if char!="\n":
+             if char!="\n" and char!="\r":
                  analyzed=analyzed+char
-        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
+        param = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        djtext = analyzed
     
-    elif(extraspaceremover=="on"):
+    if(extraspaceremover=="on"):
         analyzed = ""
         for index, char in enumerate(djtext):
             if not(djtext[index] == " " and djtext[index+1]==" "):
                 analyzed = analyzed + char
 
-        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
-        return render(request, 'analyze.html', params)
-
-    else:
-        return HttpResponse('Error')
+        param = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        
+    
+    if(removepunc!="on" and fullcaps!="on" and newlineremover!="on" and extraspaceremover!='on'):
+        return HttpResponse('ERROR')
+    
+    return render(request, 'analyze.html', param)
 
 def ex1(request):
     s=''' Navigation Bar <br> </h2>
