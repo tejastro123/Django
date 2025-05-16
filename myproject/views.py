@@ -1,0 +1,76 @@
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def index(request):
+    tejas = {'name':'Tejas', 'place':'Mars'}
+    return render(request, 'index.html', tejas)
+    #return HttpResponse("")
+ 
+def about(request):
+    return HttpResponse("about tejas <a href='/''>back</a>")
+
+def yt(request):
+    return HttpResponse('''<h1>Youtube link below<h1> 
+                        <a href="https://www.youtube.com/">  Youtube</a>
+                        <a href='/''>back</a>''')
+
+def removepunc(request):
+    djtext = request.GET.get('text','default')
+    print(djtext)
+    return HttpResponse("remove punc <a href='/''>back</a>")
+
+
+def analyze(request):
+    # Get the text
+    djtext = request.GET.get('text', 'default')
+    removepunc=request.GET.get('removepunc','off')
+    fullcaps=request.GET.get('fullcaps','off')
+    newlineremover=request.GET.get('newlineremover', 'off')
+    extraspaceremover=request.GET.get('extraspaceremover', 'off')
+
+    if removepunc == "on":
+        punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+        analyzed = ""
+        for char in djtext:
+            if char not in punctuations:
+                analyzed = analyzed + char
+        params = {'purpose': 'Removed Punctuations', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+    
+    elif fullcaps=="on":
+        analyzed=""
+        for char in djtext:
+            analyzed=analyzed+char.upper()
+        param = {'purpose': 'Change To Uppercase', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', param)
+    
+    elif newlineremover=="on":
+        analyzed=""
+        for char in djtext:
+             if char!="\n":
+                 analyzed=analyzed+char
+        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+    
+    elif(extraspaceremover=="on"):
+        analyzed = ""
+        for index, char in enumerate(djtext):
+            if not(djtext[index] == " " and djtext[index+1]==" "):
+                analyzed = analyzed + char
+
+        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+
+    else:
+        return HttpResponse('Error')
+
+def ex1(request):
+    s=''' Navigation Bar <br> </h2>
+    <a href= "https://www.youtube.com/playlist?list=PLu0W_9lII9ah7DDtYtflgwMwpT3xmjXY9" > Django Code With Harry Bhai </a><br>
+    <a href="https://www.facebook.com/"> Facebook </a> <br>
+    <a href="https://www.flipkart.com/"> Flipkart </a> <br>
+    <a href="https://www.hindustantimes.com/"> News </a> <br>
+    <a href="https://www.google.com/"> Google </a> <br> <br> 
+    <a href='/'>Home</a>'''
+    return HttpResponse(s)
+
