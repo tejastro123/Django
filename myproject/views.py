@@ -22,11 +22,12 @@ def removepunc(request):
 
 def analyze(request):
     # Get the text
-    djtext = request.GET.get('text', 'default')
-    removepunc=request.GET.get('removepunc','off')
-    fullcaps=request.GET.get('fullcaps','off')
-    newlineremover=request.GET.get('newlineremover', 'off')
-    extraspaceremover=request.GET.get('extraspaceremover', 'off')
+    djtext = request.POST.get('text', 'default')
+    print(djtext)
+    removepunc=request.POST.get('removepunc','off')
+    fullcaps=request.POST.get('fullcaps','off')
+    newlineremover=request.POST.get('newlineremover', 'off')
+    extraspaceremover=request.POST.get('extraspaceremover', 'off')
 
     if removepunc == "on":
         punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
